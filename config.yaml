@@ -1,0 +1,4 @@
+plugins:
+  example.jwks:
+    jwks_url: "https://dev-zzp5enui.us.auth0.com/.well-known/jwks.json"
+    token_prefix: Bearer
