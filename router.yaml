@@ -7,6 +7,8 @@ sandbox:
   enabled: true
 plugins:
   example.jwks:
-    jwks_url: "https://dev-zzp5enui.us.auth0.com/.well-known/jwks.json"
-    token_header: "Authorization"
-    token_prefix: "Bearer"
+    authorizers:
+    - name: "test-okta-client-1"
+      issuer: "https://dev-zzp5enui.us.auth0.com/.well-known/jwks.json"
+    - name: "test-okta-client-2"
+      issuer: "https://dev-zzp5enui.us.auth0.com/.well-known/jwks.json"
