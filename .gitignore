@@ -10,3 +10,5 @@ Cargo.lock
 **/*.rs.bk
 
 .idea
+
+e2e/node_modules

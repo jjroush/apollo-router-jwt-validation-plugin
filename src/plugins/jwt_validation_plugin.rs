@@ -10,7 +10,7 @@ use apollo_router::services::*;
 use apollo_router::Context;
 
 use reqwest::StatusCode;
-
+use serde_json::{Value};
 use schemars::JsonSchema;
 use base64::{decode};
 use serde::Deserialize;
@@ -138,23 +138,29 @@ impl Plugin for JwtValidationPlugin {
 
                 let jwt_payload_decoded = String::from_utf8(jwt_payload_decoded_raw)?;
 
+                let jwt_payload: Value = serde_json::from_str(&*jwt_payload_decoded)?;
 
+                let jwt_issuer = match jwt_payload["iss"].as_str() {
+                    Some(value) => value,
+                    None =>
+                        {
+                            return failure_message(
+                                req.context,
+                                "Unauthorized".to_string(),
+                                StatusCode::UNAUTHORIZED,
+                            );
+                        }
+                };
 
-                // let jwt_payload_base64 = match jwt_value_raw {
-                //     Ok(value) => value,
-                //     Err(_not_a_string_error) => {
-                //         // Prepare an HTTP 400 response with a GraphQL error message
-                //         return failure_message(
-                //             req.context,
-                //             "Authorization' header is not convertible to a string".to_string(),
-                //             StatusCode::BAD_REQUEST,
-                //         );
-                //     }
-                // };
-
-                println!("{:?}", jwt_payload_decoded);
-
-                Ok(ControlFlow::Continue(req))
+                return if issuers.contains(&jwt_issuer.to_string()) {
+                    Ok(ControlFlow::Continue(req))
+                } else {
+                    failure_message(
+                        req.context,
+                        "Unauthorized".to_string(),
+                        StatusCode::UNAUTHORIZED,
+                    )
+                }
             })
             .service(service)
             .boxed()
@@ -171,5 +177,3 @@ impl Plugin for JwtValidationPlugin {
         service
     }
 }
-
-register_plugin!("example", "jwks", JwtValidationPlugin);
