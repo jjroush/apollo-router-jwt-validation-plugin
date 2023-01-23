@@ -68,7 +68,7 @@ impl Plugin for JwtValidationPlugin {
                 ) -> Result<ControlFlow<supergraph::Response, supergraph::Request>, BoxError>
                 {
                     let res = supergraph::Response::error_builder()
-                        .error(graphql::Error::builder().message(msg).build())
+                        .error(graphql::Error::builder().message(msg).extension_code("AUTH_ERROR").build())
                         .status_code(status)
                         .context(context)
                         .build()?;
@@ -177,3 +177,5 @@ impl Plugin for JwtValidationPlugin {
         service
     }
 }
+
+register_plugin!("example", "jwt", JwtValidationPlugin);

@@ -6,7 +6,7 @@ homepage:
 sandbox:
   enabled: true
 plugins:
-  example.jwks:
+  example.jwt:
     authorizers:
     - name: "test-okta-client-1"
       issuer: "https://example1.oktapreview.com/oauth2/123456abcd"

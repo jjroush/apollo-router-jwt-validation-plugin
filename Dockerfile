@@ -1,7 +1,11 @@
-FROM rust:1.63.0
+FROM rust:1.66.1
 
 WORKDIR /usr/src
 COPY . .
+
+RUN apt-get update
+RUN apt-get -y install \
+    protobuf-compiler
 
 RUN rustup component add rustfmt
 RUN cargo build
